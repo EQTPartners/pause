@@ -21,7 +21,6 @@ def run(argv=None):
     parser.add_argument(
         "--model",
         type=str,
-        # default="base",
         default="small",
         help="The tfhub link for the base embedding model",
     )
@@ -159,7 +158,6 @@ def run(argv=None):
         steps_per_epoch=opts.train_steps_per_epoch,
         validation_data=test_dataset,
         callbacks=[tensorboard_callback, AnnealingCallback()],
-        # verbose=2,
     )
 
     # Save Siamese Model

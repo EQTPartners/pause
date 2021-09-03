@@ -9,7 +9,6 @@ import os
 import argparse
 import logging
 import datetime
-from warmup import WarmUp
 import tensorflow as tf
 from embed_model import EmbedModel
 from siamese_model import SiameseModel
@@ -112,7 +111,6 @@ def run(argv=None):
     )
 
     num_train_steps = opts.train_steps_per_epoch * opts.train_epochs
-    num_warmup_steps = int(0.1 * num_train_steps)
 
     mirrored_strategy = tf.distribute.MirroredStrategy()
     with mirrored_strategy.scope():
@@ -152,7 +150,6 @@ def run(argv=None):
         steps_per_epoch=opts.train_steps_per_epoch,
         validation_data=test_dataset,
         callbacks=[tensorboard_callback],
-        # verbose=2,
     )
 
     # Save Siamese Model

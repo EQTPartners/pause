@@ -8,7 +8,6 @@ License: MIT, https://github.com/EQTPartners/pause/LICENSE.md
 import argparse
 import logging
 import tensorflow as tf
-import tensorflow_text as text
 import senteval
 from tensorflow.core.example import example_pb2, feature_pb2
 
@@ -85,7 +84,6 @@ if __name__ == "__main__":
         "CR",
         "MPQA",
         "SUBJ",
-        # "SST2",
         "TREC",
         "MRPC",
     ]

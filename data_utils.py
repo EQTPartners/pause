@@ -21,7 +21,6 @@ feature_spec = {
 
 
 def train_files(prec="50"):
-    # TODO: use public link
     return [
         "gs://motherbrain-pause/data/{}p/entailment/*".format(prec),
         "gs://motherbrain-pause/data/{}p/contradiction/*".format(prec),
@@ -31,7 +30,6 @@ def train_files(prec="50"):
 
 
 def eval_files(prec="50"):
-    # TODO: use public link
     return ["gs://motherbrain-pause/data/{}p/eval/*".format(prec)]
 
 
@@ -79,8 +77,6 @@ def make_dataset(
         dataset = tf.data.experimental.sample_from_datasets(
             [entailment_ds, contradiction_ds, neutral_ds, unl_ds],
             weights=[_pr, _pr, _pr, 1 - prior]
-            # [entailment_ds, contradiction_ds, neutral_ds],
-            # weights=[prior, prior, prior]
         )
     else:
         dataset = tf.data.TFRecordDataset(
@@ -90,10 +86,7 @@ def make_dataset(
             compression_type="GZIP",
         )
 
-    # options = tf.data.Options()
-    # options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.DATA
     dataset = dataset.map(_parse_function, num_parallel_calls=AUTOTUNE)
-    # dataset = dataset.with_options(options)
     dataset = dataset.batch(batch_size)
     dataset = dataset.prefetch(AUTOTUNE)
     return dataset

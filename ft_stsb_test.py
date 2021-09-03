@@ -10,7 +10,6 @@ import argparse
 import logging
 import pandas as pd
 import tensorflow as tf
-import tensorflow_text as text
 
 
 def run(argv=None):
@@ -28,21 +27,11 @@ def run(argv=None):
     inference_files = [
         "gs://motherbrain-pause/data/stsb/test/data_tfrecord-00000-of-00001.gz",
     ]
-    feature_description = {
-        "uuid": tf.io.FixedLenFeature([], tf.int64),
-        "sentence": tf.io.FixedLenFeature([], tf.string),
-        "match_sentence": tf.io.FixedLenFeature([], tf.string),
-        "score": tf.io.FixedLenFeature([], tf.float32),
-    }
-
-    def _parse_function(example_proto):
-        return tf.io.parse_single_example(example_proto, feature_description)
 
     print("model={}".format(opts.model))
     model_dir = "./artifacts/model/{}".format(opts.model)
     loaded_model = tf.saved_model.load(model_dir)
     dataset = tf.data.TFRecordDataset(inference_files, compression_type="GZIP")
-    parsed_dataset = dataset.map(_parse_function)
     f = loaded_model.signatures["serving_default"]
 
     res = []
