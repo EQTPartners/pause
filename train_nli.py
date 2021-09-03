@@ -151,7 +151,6 @@ def run(argv=None):
         def on_train_batch_begin(self, batch, logs=None):
             nnpu_loss_weight.assign(pow(batch / num_train_steps, 3))
 
-    # Start training
     siamese_model.fit(
         train_dataset.repeat(),
         epochs=opts.train_epochs,
@@ -160,13 +159,10 @@ def run(argv=None):
         callbacks=[tensorboard_callback, AnnealingCallback()],
     )
 
-    # Save Siamese Model
     siamese_model.save_model(opts.model_dir)
 
-    # Save BERT model
     bert_model.save_model(opts.model_dir)
 
-    # Save Model weights
     siamese_model.save_model(opts.model_dir, export_weights=True)
 
 

@@ -52,11 +52,8 @@ class SiameseModel(tf.keras.Model):
                 pred,
                 regularization_losses=self.losses,
             )
-        # Compute gradients
         gradients = tape.gradient(loss, self.trainable_variables)
-        # Update weights
         self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
-        # Metrics
         self.compiled_metrics.update_state(_label, pred)
         return {m.name: m.result() for m in self.metrics}
 

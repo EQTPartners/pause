@@ -14,7 +14,6 @@ This repository contains Tensorflow implementation of PAUSE to reproduce the exp
   title={PAUSE: Positive and Annealed Unlabeled Sentence Embedding},
   author={Cao, Lele and Larsson, Emil and Ehrenheim, Vilhelm von and Rocha, Dhiana Deva Cavalcanti and Martin, Anna and Horn, Sonja},
   booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-  pages={1--12},
   year={2021}
 }
 ```
@@ -34,7 +33,7 @@ pip install -r requirements.txt
 ```
 
 ## Unsupervised STS
-Models are trained on the combination of the SNLI and Multi-Genre NLI datasets, which contains one million sentence pairs annotated with three labels: entailment, contradiction and neutral. The trained model is tested on STS 2012-2016, STS benchmark, and SICK-Relatedness (SICK-R) datasets, which have labels between 0 and 5 indicating the semantic relatedness of sentence pairs.
+Models are trained on a combination of the SNLI and Multi-Genre NLI datasets, which contain one million sentence pairs annotated with three labels: entailment, contradiction and neutral. The trained model is tested on the STS 2012-2016, STS benchmark, and SICK-Relatedness (SICK-R) datasets, which have labels between 0 and 5 indicating the semantic relatedness of sentence pairs.
 
 ### Training
 Example 1: train PAUSE-small using 5% labels for 10 epochs
@@ -82,24 +81,24 @@ optional arguments:
 ```
 
 ### Testing
-After the model is trained, you will be promoted where the model is saved, e.g. `./artifacts/model/20210517-131724`, where the last chunk is the ID of the model. To test the model with that ID, run
+After the model is trained, you will be prompted to where the model is saved, e.g. `./artifacts/model/20210517-131724`, where the directory name (`20210517-131724`) is the model ID. To test the model with that ID, run
 
 ```bash
 python test_sts.py --model=20210517-131724
 ```
 
-The test result on STS datasets wil lbe printed on console and also saved in file `./artifacts/test/sts_20210517-131724.txt`
+The test result on STS datasets will be printed on console and also saved in file `./artifacts/test/sts_20210517-131724.txt`
 
 ## Supervised STS
 ### Train
-Suppose the pretrained model is located at `./artifacts/model/20210517-131725`, then to finetune on supervised STSb, run
+To finetune a pertained model located at ./artifacts/model/20210517-131725 on supervised STSb, run
 
 ```bash
 python ft_stsb.py --pretrained_weights=./artifacts/model/20210517-131725
 ```
 
 ### Testing
-After the model is finetuned, you will be promoted where the model is saved, e.g. `./artifacts/model/20210517-131726`, where the last chunk is the ID of the model. To test the model with that ID, run
+After the model is finetuned, you will be prompted to where the model is saved, e.g. `./artifacts/model/20210517-131726`, where the directory name (`20210517-131726`) is the model ID. To test the model with that ID, run
 
 ```bash
 python ft_stsb_test.py --model=20210517-131726
@@ -107,7 +106,7 @@ python ft_stsb_test.py --model=20210517-131726
 
 ## SentEval evaluation
 
-To evaluate the PAUSE embeddings using [SentEval](https://github.com/facebookresearch/SentEval)
+To evaluate the PAUSE embeddings using [SentEval](https://github.com/facebookresearch/SentEval),
 follow the instructions for downloading the data and installing the package.
 
 Then, run the `sent_eval.py` script:
