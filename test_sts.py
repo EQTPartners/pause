@@ -10,8 +10,6 @@ import argparse
 import logging
 import pandas as pd
 import tensorflow as tf
-import tensorflow_text as text
-
 
 def run(argv=None):
     parser = argparse.ArgumentParser()
@@ -45,7 +43,6 @@ def run(argv=None):
     model_dir = "./artifacts/model/{}".format(opts.model)
     loaded_model = tf.saved_model.load(model_dir)
     dataset = tf.data.TFRecordDataset(inference_files, compression_type="GZIP")
-    parsed_dataset = dataset.map(_parse_function)
     f = loaded_model.signatures["serving_default"]
 
     res = []
