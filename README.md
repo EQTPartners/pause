@@ -9,7 +9,7 @@ Sentence embedding refers to a set of effective and versatile techniques for con
 - our experiments (reproduction steps are illustrated below) show that PAUSE constantly outperforms baseline methods.
 
 This repository contains Tensorflow implementation of PAUSE to reproduce the experimental results. Upon using this repo for your work, please cite:
-```
+```bibtex
 @inproceedings{cao2021pause,
   title={PAUSE: Positive and Annealed Unlabeled Sentence Embedding},
   author={Cao, Lele and Larsson, Emil and Ehrenheim, Vilhelm von and Rocha, Dhiana Deva Cavalcanti and Martin, Anna and Horn, Sonja},
@@ -45,10 +45,12 @@ Example 2: train PAUSE-base using 30% labels for 20 epochs
 python train_nli.py --batch_size=1024 --train_epochs=20 --model=base --pos_sample_prec=30
 ```
 
-To check the parameters: 
+To check the parameters, run
 ```bash
 python train_nli.py --help
-
+```
+which will print the usage as follows.
+```
 usage: train_nli.py [-h] [--model MODEL]
                     [--pretrained_weights PRETRAINED_WEIGHTS]
                     [--train_epochs TRAIN_EPOCHS] [--batch_size BATCH_SIZE]
