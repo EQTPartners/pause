@@ -14,7 +14,6 @@ This repository contains Tensorflow implementation of PAUSE to reproduce the exp
   title={PAUSE: Positive and Annealed Unlabeled Sentence Embedding},
   author={Cao, Lele and Larsson, Emil and Ehrenheim, Vilhelm von and Rocha, Dhiana Deva Cavalcanti and Martin, Anna and Horn, Sonja},
   booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-  pages={1--12},
   year={2021}
 }
 ```
