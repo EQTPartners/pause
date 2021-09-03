@@ -23,7 +23,6 @@ class EmbedModel(tf.keras.Model):
         print("bert_model_link=", bert_model_link)
         self.bert_layer = hub.KerasLayer(bert_model_link, trainable=True)
 
-        # Tokenizer Params
         self._sep_id = tf.constant(102, dtype=tf.int32)
         self._cls_id = tf.constant(101, dtype=tf.int32)
         self._pad_id = tf.constant(0, dtype=tf.int32)
@@ -36,7 +35,6 @@ class EmbedModel(tf.keras.Model):
 
     def tokenize_single_sentence_unpad(self, sequence: tf.Tensor):
         word_ids = self.tokenizer.tokenize(sequence)
-        # Tokenizer default puts tokens into array of size 1. merge_dims flattens it
         word_ids = word_ids.merge_dims(-2, -1)
         cls_token = tf.fill([word_ids.nrows(), 1], self._cls_id)
         word_ids = tf.concat([cls_token, word_ids], 1)
