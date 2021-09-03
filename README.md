@@ -9,7 +9,7 @@ Sentence embedding refers to a set of effective and versatile techniques for con
 - our experiments (reproduction steps are illustrated below) show that PAUSE constantly outperforms baseline methods.
 
 This repository contains Tensorflow implementation of PAUSE to reproduce the experimental results. Upon using this repo for your work, please cite:
-```
+```bibtex
 @inproceedings{cao2021pause,
   title={PAUSE: Positive and Annealed Unlabeled Sentence Embedding},
   author={Cao, Lele and Larsson, Emil and Ehrenheim, Vilhelm von and Rocha, Dhiana Deva Cavalcanti and Martin, Anna and Horn, Sonja},
