@@ -33,21 +33,14 @@ def calculate_losses(network_out, labels, label_idx, prior):
 def get_nnpu_loss_fn(prior, nnpu_weight):
     def nnpu_loss(y_true, y_pred):
         _loss = 0.0
-        # Calc nnPU loss
         for i in range(3):
             _loss += calculate_losses(y_pred[:, i : i + 1], y_true, i, prior)
         _loss *= nnpu_weight * (1 / 3)
 
-        # Calc CE loss
-        # print('y_true', y_true)
         y_labeled_mask = tf.greater(tf.reshape(y_true, [-1]), -1)
-        # print('y_labeled_mask', y_labeled_mask)
         y_labeled_idx = tf.reshape(tf.where(y_labeled_mask), [-1])
-        # print('y_labeled_idx', y_labeled_idx)
         y_true_gathered = tf.gather(y_true, y_labeled_idx, axis=0)
-        # print('y_true_gathered', y_true_gathered)
         y_pred_gathered = tf.gather(y_pred, y_labeled_idx, axis=0)
-        # print('y_pred_gathered', y_pred_gathered)
         _loss += tf.keras.losses.sparse_categorical_crossentropy(
             y_true_gathered, y_pred_gathered, from_logits=True
         )
