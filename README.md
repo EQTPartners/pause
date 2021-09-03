@@ -45,10 +45,12 @@ Example 2: train PAUSE-base using 30% labels for 20 epochs
 python train_nli.py --batch_size=1024 --train_epochs=20 --model=base --pos_sample_prec=30
 ```
 
-To check the parameters: 
+To check the parameters, run
 ```bash
 python train_nli.py --help
-
+```
+which will print the usage as follows.
+```
 usage: train_nli.py [-h] [--model MODEL]
                     [--pretrained_weights PRETRAINED_WEIGHTS]
                     [--train_epochs TRAIN_EPOCHS] [--batch_size BATCH_SIZE]
