@@ -12,7 +12,6 @@ import senteval
 from tensorflow.core.example import example_pb2, feature_pb2
 
 
-# SentEval prepare and batcher
 def prepare(params, samples):
     return
 
@@ -58,7 +57,6 @@ if __name__ == "__main__":
     loaded_model = tf.saved_model.load(model_dir)
     predict_fn = loaded_model.signatures["serving_default"]
 
-    # Set params for SentEval
     params_senteval = {
         "task_path": args.data_path,
         "usepytorch": True,
@@ -73,7 +71,6 @@ if __name__ == "__main__":
         "predict_fn": predict_fn,
     }
 
-    # Set up logger
     logging.basicConfig(
         format="%(asctime)s : %(message)s", level=logging.DEBUG
     )
