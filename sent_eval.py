@@ -64,7 +64,7 @@ def make_example(text: str) -> tf.Tensor:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--data-path",
+        "--data_path",
         type=str,
         required=True,
         help="Path to SentEval data",
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.model_location.lower == "gcs":
+    if "gcs" in str(args.model_location).lower():
         model_dir = (
             f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
         )

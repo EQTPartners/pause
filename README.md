@@ -120,13 +120,33 @@ python ft_stsb_test.py --model=20210517-131726
 
 ## SentEval evaluation
 
-To evaluate the PAUSE embeddings using [SentEval](https://github.com/facebookresearch/SentEval),
-follow the instructions for downloading the data and installing the package.
-
+To evaluate the PAUSE embeddings using [SentEval](https://github.com/facebookresearch/SentEval), you need to download the data first:
+```bash
+cd ./data/downstream
+./get_transfer_data.bash
+cd ../..
+```
 Then, run the `sent_eval.py` script:
 
 ```bash
 python sent_eval.py \
-  --data-path <path to senteval data> \
-  --model 20210328-212801
+  --data_path=./data \
+  --model=20210328-212801
 ```
+where the `--model` parameter specified the ID of the model you want to evaluate. By default, the model should exist in folder `./artifacts/model/embed`. If you want to evaluate a trained model in our public GCS (`gs://motherbrain-pause/model/...`), please run (e.g. `PAUSE-NLI-base-50%`):
+```bash
+python sent_eval.py \
+  --data_path=./data \
+  --model_location=gcs \
+  --model=20210329-065047
+```
+We provide the following models for demonstration purposes:
+|        Model        |      Model ID    |
+|---------------------|:----------------:|
+| PAUSE-NLI-base-100% |  20210414-162525 |
+| PAUSE-NLI-base-70%  |  20210328-212801 |
+| PAUSE-NLI-base-50%  |  20210329-065047 |
+| PAUSE-NLI-base-30%  |  20210329-133137 |
+| PAUSE-NLI-base-10%  |  20210329-180000 |
+| PAUSE-NLI-base-5%   |  20210329-205354 |
+| PAUSE-NLI-base-1%   |  20210329-195024 |
