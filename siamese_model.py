@@ -5,6 +5,7 @@ License: MIT, https://github.com/EQTPartners/pause/LICENSE.md
 """
 
 
+from typing import Any, Union
 import tensorflow as tf
 import os
 from angular_similarity_layer import AngularSimilarity
@@ -14,7 +15,15 @@ _MATCH_FEATURE_KEY = "match_sentence"
 
 
 class SiameseModel(tf.keras.Model):
-    def __init__(self, bert_model: EmbedModel, is_reg: bool = False):
+    """The implementation of the duel-encoder (siamese) model."""
+
+    def __init__(self, bert_model: EmbedModel, is_reg: bool = False) -> None:
+        """Initialize a duel-encoder model.
+
+        Args:
+            bert_model (EmbedModel): The embedding model instance.
+            is_reg (bool, optional): Is using regression target? Defaults to False.
+        """
         super(SiameseModel, self).__init__()
         self.output_names = ["logit", "acos_sim", "cos_sim"]
         self.bert_model = bert_model
@@ -26,7 +35,15 @@ class SiameseModel(tf.keras.Model):
         if is_reg:
             self.dense3 = tf.keras.layers.Dense(1, activation=tf.nn.relu)
 
-    def call(self, data):
+    def call(self, data: dict) -> Union[tf.Tensor, tf.Tensor, tf.Tensor]:
+        """Implements the operations in siamese model.
+
+        Args:
+            data (dict): The input sentence pairs.
+
+        Returns:
+            Union[tf.Tensor, tf.Tensor, tf.Tensor]: Network output and calculated similarity scores.
+        """
         bert_out_a = self.bert_model(data[_FEATURE_KEY])
         bert_out_b = self.bert_model(data[_MATCH_FEATURE_KEY])
         acos_sim = self.angular_similarity(bert_out_a, bert_out_b)
@@ -43,7 +60,15 @@ class SiameseModel(tf.keras.Model):
         cos_sim = tf.expand_dims(cos_sim, axis=-1)
         return logit, acos_sim, cos_sim
 
-    def train_step(self, data):
+    def train_step(self, data: Union[dict, tf.Tensor]) -> dict:
+        """One training step.
+
+        Args:
+            data (Union[dict, tf.Tensor]): The input features and label.
+
+        Returns:
+            dict: he evaluation metrics on training batch.
+        """
         _features, _label = data
         with tf.GradientTape() as tape:
             pred, _, _ = self(_features, training=True)
@@ -57,14 +82,28 @@ class SiameseModel(tf.keras.Model):
         self.compiled_metrics.update_state(_label, pred)
         return {m.name: m.result() for m in self.metrics}
 
-    def test_step(self, data):
+    def test_step(self, data: Union[dict, tf.Tensor]) -> dict:
+        """One test step.
+
+        Args:
+            data (Union[dict, tf.Tensor]): The input features and label.
+
+        Returns:
+            dict: The evaluation metrics on test batch.
+        """
         _features, _label = data
         pred, _, _ = self(_features, training=False)
         self.compiled_loss(_label, pred, regularization_losses=self.losses)
         self.compiled_metrics.update_state(_label, pred)
         return {m.name: m.result() for m in self.metrics}
 
-    def save_model(self, filepath, export_weights=False):
+    def save_model(self, filepath: str, export_weights: bool = False) -> None:
+        """Save the trained siamese model
+
+        Args:
+            filepath (str): The folder to which the model will be saved.
+            export_weights (bool, optional): Also save weights snapshots when True. Defaults to False.
+        """
         tf.get_logger().info("Saving model: {}".format(filepath))
         signatures = {
             "serving_default": self._get_serve_tf_examples_fn().get_concrete_function(
@@ -81,11 +120,11 @@ class SiameseModel(tf.keras.Model):
         if export_weights:
             self.save_weights(os.path.join(filepath, "saved_weights"))
 
-    def _get_serve_tf_examples_fn(self):
+    def _get_serve_tf_examples_fn(self) -> tf.function:
         """Returns a function that parses a serialized tf.Example."""
 
         @tf.function
-        def serve_tf_examples_fn(serialized_tf_examples):
+        def serve_tf_examples_fn(serialized_tf_examples: tf.Tensor) -> dict:
             """Returns the output to be used in the serving signature."""
             feature_spec = {
                 _FEATURE_KEY: tf.io.FixedLenFeature([], tf.string),
