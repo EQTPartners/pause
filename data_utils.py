@@ -9,7 +9,7 @@ import tensorflow as tf
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-# Feature specification (dictionary) of the pre-processed dataset
+# Feature and label specification (dictionary) of the pre-processed dataset
 feature_spec = {
     "gold_label": tf.io.FixedLenFeature(shape=[1], dtype=tf.string, default_value=None),
     "label": tf.io.FixedLenFeature(shape=[1], dtype=tf.int64, default_value=None),
