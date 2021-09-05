@@ -9,10 +9,12 @@ import os
 import argparse
 import logging
 import datetime
+from typing import Any, Union
 import tensorflow as tf
 from embed_model import EmbedModel
 from siamese_model import SiameseModel
 
+# Feature specification (dictionary) of the pre-processed dataset
 feature_spec = {
     "score": tf.io.FixedLenFeature(shape=[1], dtype=tf.float32, default_value=None),
     "match_sentence": tf.io.FixedLenFeature(
@@ -23,8 +25,36 @@ feature_spec = {
 }
 
 
-def make_dataset(feature_spec, file_pattern, batch_size, label_key, training=True):
-    def _parse_function(example_proto):
+def make_dataset(
+    feature_spec: dict,
+    file_pattern: list,
+    batch_size: int,
+    label_key: str,
+    training: bool = True,
+) -> tf.data.Dataset:
+    """Construct a train/eval dataset for funtuning PAUSE.
+
+    Args:
+        feature_spec (dict): The feature specification.
+        file_pattern (list): The input TFRecord file patterns.
+        batch_size (int): The training/evaluation batch size.
+        label_key (str): The key of the label.
+        training (bool, optional): Indicate if this is a training dataset. Defaults to True.
+
+    Returns:
+        tf.data.Dataset: The constructed dataset
+    """
+
+    def _parse_function(example_proto: Any) -> Union[dict, tf.Tensor]:
+        """Parse feature and label from input example.
+
+        Args:
+            example_proto (Any): The input example (a scalar string Tensor).
+
+        Returns:
+            Union[dict, tf.Tensor]: The parsed feature and label.
+        """
+
         _features = tf.io.parse_single_example(example_proto, feature_spec)
         _label = _features.pop(label_key)
         return _features, _label
@@ -49,8 +79,16 @@ def make_dataset(feature_spec, file_pattern, batch_size, label_key, training=Tru
     return dataset
 
 
-def run(argv=None):
+def run()->None:
+    """Finetune PAUSE on supervised STSb."""
+    
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="small",
+        help="The tfhub link for the base embedding model that should match pretrained model",
+    )
     parser.add_argument(
         "--pretrained_weights",
         default="gs://motherbrain-pause/model/20210414-162525/serving_model_dir",
@@ -92,7 +130,7 @@ def run(argv=None):
         help="The path where models and weights are stored",
     )
 
-    opts, _ = parser.parse_known_args(argv)
+    opts, _ = parser.parse_known_args()
     print(opts)
 
     train_dataset = make_dataset(
@@ -112,10 +150,18 @@ def run(argv=None):
 
     num_train_steps = opts.train_steps_per_epoch * opts.train_epochs
 
+    bert_model_link = (
+        "https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-2_H-128_A-2/1"
+    )
+    if opts.model == "base":
+        bert_model_link = (
+            "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/3"
+        )
+
     mirrored_strategy = tf.distribute.MirroredStrategy()
     with mirrored_strategy.scope():
         bert_model = EmbedModel(
-            "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/3",
+            bert_model_link,
             opts.max_seq_len,
         )
         siamese_model = SiameseModel(bert_model, is_reg=True)
