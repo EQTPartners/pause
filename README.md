@@ -38,11 +38,19 @@ Models are trained on a combination of the SNLI and Multi-Genre NLI datasets, wh
 ### Training
 Example 1: train PAUSE-small using 5% labels for 10 epochs
 ```bash
-python train_nli.py --batch_size=1024 --train_epochs=10 --model=small --pos_sample_prec=5
+python train_nli.py \
+  --batch_size=1024 \
+  --train_epochs=10 \
+  --model=small \
+  --pos_sample_prec=5
 ```
 Example 2: train PAUSE-base using 30% labels for 20 epochs
 ```bash
-python train_nli.py --batch_size=1024 --train_epochs=20 --model=base --pos_sample_prec=30
+python train_nli.py \
+  --batch_size=1024 \
+  --train_epochs=20 \
+  --model=base \
+  --pos_sample_prec=30
 ```
 
 To check the parameters, run
@@ -93,11 +101,15 @@ The test result on STS datasets will be printed on console and also saved in fil
 
 ## Supervised STS
 ### Train
-To finetune a pertained model located at ./artifacts/model/20210517-131725 on supervised STSb, run
+You can continue to finetune a pertained model on supervised STSb. For example, assume we have trained a PAUSE model based on **small** BERT (say located at `./artifacts/model/20210517-131725`), if we want to finetune the model on STSb for 2 epochs, we can run
 
 ```bash
-python ft_stsb.py --pretrained_weights=./artifacts/model/20210517-131725
+python ft_stsb.py \
+  --model=small \
+  --train_epochs=2 \
+  --pretrained_weights=./artifacts/model/20210517-131725
 ```
+Note that it is important to match the model size (`--model`) with the pretrained model size (`--pretrained_weights`).
 
 ### Testing
 After the model is finetuned, you will be prompted to where the model is saved, e.g. `./artifacts/model/20210517-131726`, where the directory name (`20210517-131726`) is the model ID. To test the model with that ID, run

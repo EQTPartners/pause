@@ -9,6 +9,7 @@ import tensorflow as tf
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
+# Feature and label specification (dictionary) of the pre-processed dataset
 feature_spec = {
     "gold_label": tf.io.FixedLenFeature(shape=[1], dtype=tf.string, default_value=None),
     "label": tf.io.FixedLenFeature(shape=[1], dtype=tf.int64, default_value=None),
@@ -20,7 +21,15 @@ feature_spec = {
 }
 
 
-def train_files(prec="50"):
+def train_files(prec: str = "50") -> list:
+    """Obtain a list of pre-processed dataset file patterns for training.
+
+    Args:
+        prec (str, optional): The percentage of labels to use. Defaults to "50".
+
+    Returns:
+        list: The TFRecord file patterns (entailment, contradiction, neutral, unlabeled) for training.
+    """
     return [
         "gs://motherbrain-pause/data/{}p/entailment/*".format(prec),
         "gs://motherbrain-pause/data/{}p/contradiction/*".format(prec),
@@ -29,11 +38,32 @@ def train_files(prec="50"):
     ]
 
 
-def eval_files(prec="50"):
+def eval_files(prec: str = "50") -> list:
+    """Obtain a list of pre-processed dataset file patterns for evaluation.
+
+    Args:
+        prec (str, optional): The percentage here should match with train_files.
+
+    Returns:
+        list: The TFRecord file patterns for evaluation during training.
+    """
     return ["gs://motherbrain-pause/data/{}p/eval/*".format(prec)]
 
 
-def get_file(file_pattern, sub_type=None):
+def get_file(file_pattern: list, sub_type: str = None) -> list:
+    """Get a subset from file patterns that belong to a sub-type.
+    If no sub-type is specified, return all file patterns.
+
+    Args:
+        file_pattern (list): The input file patterns
+        sub_type (str, optional): A string to search in file patterns. Defaults to None.
+
+    Raises:
+        ValueError: No file pattern matches the sub-type provided.
+
+    Returns:
+        list: A filtered sub list of file patterns.
+    """
     if sub_type is None:
         return file_pattern
     result = []
@@ -49,8 +79,27 @@ def get_file(file_pattern, sub_type=None):
 
 
 def make_dataset(
-    feature_spec, file_pattern, batch_size, label_key, prior=None, training=True
-):
+    feature_spec: dict,
+    file_pattern: list,
+    batch_size: int,
+    label_key: str,
+    prior: float = None,
+    training: bool = True,
+) -> tf.data.Dataset:
+    """Construct a dataset for training or evaluation
+
+    Args:
+        feature_spec (dict): The feature specification of input TFRecord files.
+        file_pattern (list): The input file patterns.
+        batch_size (int): Batch size.
+        label_key (str): The key of the label.
+        prior (float, optional): The prior hyper-parameter. Defaults to None (should not be None for training).
+        training (bool, optional): Indicate if this is for training. Defaults to True.
+
+    Returns:
+        tf.data.Dataset: The constructed dataset.
+    """
+
     def _parse_function(example_proto):
         transformed_features = tf.io.parse_single_example(example_proto, feature_spec)
         transformed_features.pop(label_key)
@@ -76,7 +125,7 @@ def make_dataset(
         _pr = prior / 3.0
         dataset = tf.data.experimental.sample_from_datasets(
             [entailment_ds, contradiction_ds, neutral_ds, unl_ds],
-            weights=[_pr, _pr, _pr, 1 - prior]
+            weights=[_pr, _pr, _pr, 1 - prior],
         )
     else:
         dataset = tf.data.TFRecordDataset(

@@ -11,12 +11,26 @@ import tensorflow as tf
 import senteval
 from tensorflow.core.example import example_pb2, feature_pb2
 
+# The following import is mandatory
+import tensorflow_text as text
+import numpy as np
 
-def prepare(params, samples):
+
+def prepare(params: senteval.utils.dotdict, samples: list) -> None:
+    """Stub function required by SentEval"""
     return
 
 
-def batcher(params, batch):
+def batcher(params: senteval.utils.dotdict, batch: list) -> np.ndarray:
+    """Transforms a batch of text sentences into sentence embeddings.
+
+    Args:
+        params (senteval.utils.dotdict): [description]
+        batch (list): [description]
+
+    Returns:
+        np.ndarray: [description]
+    """
     batch = [" ".join(sent) if sent != [] else "." for sent in batch]
     embeddings = params["predict_fn"](
         examples=tf.constant([make_example(sent) for sent in batch])
@@ -24,7 +38,15 @@ def batcher(params, batch):
     return embeddings
 
 
-def make_example(text):
+def make_example(text: str) -> tf.Tensor:
+    """Make an example from plain string.
+
+    Args:
+        text (str): The input string.
+
+    Returns:
+        tf.Tensor: The serialized string example.
+    """
     ex = example_pb2.Example(
         features=feature_pb2.Features(
             feature={
@@ -51,9 +73,18 @@ if __name__ == "__main__":
         required=True,
         help="The trained embed model",
     )
+    parser.add_argument(
+        "--model_location",
+        default="local",
+        type=str,
+        help="The model location: gcs or local",
+    )
     args = parser.parse_args()
 
-    model_dir = f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
+    if args.model_location.lower == "gcs":
+        model_dir = f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
+    else:
+        model_dir = f"./artifacts/model/embed/{args.model}/"
     loaded_model = tf.saved_model.load(model_dir)
     predict_fn = loaded_model.signatures["serving_default"]
 
@@ -83,6 +114,7 @@ if __name__ == "__main__":
         "SUBJ",
         "TREC",
         "MRPC",
+        "SST",
     ]
     results = se.eval(transfer_tasks)
     print(args.model, results)

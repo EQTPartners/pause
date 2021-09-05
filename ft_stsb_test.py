@@ -11,8 +11,12 @@ import logging
 import pandas as pd
 import tensorflow as tf
 
+# The following import is mandatory
+import tensorflow_text as text
 
-def run(argv=None):
+
+def run():
+    """Test the finetuned model (supervised) on STSb test set."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model",
@@ -21,7 +25,7 @@ def run(argv=None):
         help="The trained siamese model",
     )
 
-    opts, _ = parser.parse_known_args(argv)
+    opts, _ = parser.parse_known_args()
     print(opts)
 
     inference_files = [
