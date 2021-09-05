@@ -5,6 +5,8 @@ License: MIT, https://github.com/EQTPartners/pause/LICENSE.md
 """
 
 
+import os
+import json
 import argparse
 import logging
 import tensorflow as tf
@@ -62,7 +64,7 @@ def make_example(text: str) -> tf.Tensor:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--data-path",
+        "--data_path",
         type=str,
         required=True,
         help="Path to SentEval data",
@@ -81,8 +83,10 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.model_location.lower == "gcs":
-        model_dir = f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
+    if "gcs" in str(args.model_location).lower():
+        model_dir = (
+            f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
+        )
     else:
         model_dir = f"./artifacts/model/embed/{args.model}/"
     loaded_model = tf.saved_model.load(model_dir)
@@ -102,21 +106,25 @@ if __name__ == "__main__":
         "predict_fn": predict_fn,
     }
 
-    logging.basicConfig(
-        format="%(asctime)s : %(message)s", level=logging.DEBUG
-    )
+    logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.DEBUG)
 
     se = senteval.engine.SE(params_senteval, batcher, prepare)
     transfer_tasks = [
+        "SST2",
         "MR",
         "CR",
         "MPQA",
         "SUBJ",
         "TREC",
         "MRPC",
-        "SST",
     ]
     results = se.eval(transfer_tasks)
     print(args.model, results)
-    with open(f"sent_eval_{args.model}.txt", "w") as out_file:
-        out_file.write(results)
+
+    test_result_path = "./artifacts/test"
+    if not os.path.exists(test_result_path):
+        os.makedirs(test_result_path)
+    senteval_out_file = "{}/sent_eval_{}.txt".format(test_result_path, args.model)
+    with open(senteval_out_file, "w+") as out_file:
+        out_file.write(json.dumps(results))
+    print("The SentEval test result is exported to {}".format(senteval_out_file))
