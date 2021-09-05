@@ -82,7 +82,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.model_location.lower == "gcs":
-        model_dir = f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
+        model_dir = (
+            f"gs://motherbrain-pause/model/{args.model}/embed/serving_model_dir/"
+        )
     else:
         model_dir = f"./artifacts/model/embed/{args.model}/"
     loaded_model = tf.saved_model.load(model_dir)
@@ -102,19 +104,17 @@ if __name__ == "__main__":
         "predict_fn": predict_fn,
     }
 
-    logging.basicConfig(
-        format="%(asctime)s : %(message)s", level=logging.DEBUG
-    )
+    logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.DEBUG)
 
     se = senteval.engine.SE(params_senteval, batcher, prepare)
     transfer_tasks = [
+        "SST2",
         "MR",
         "CR",
         "MPQA",
         "SUBJ",
         "TREC",
         "MRPC",
-        "SST",
     ]
     results = se.eval(transfer_tasks)
     print(args.model, results)
