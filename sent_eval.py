@@ -5,6 +5,8 @@ License: MIT, https://github.com/EQTPartners/pause/LICENSE.md
 """
 
 
+import os
+import json
 import argparse
 import logging
 import tensorflow as tf
@@ -118,5 +120,11 @@ if __name__ == "__main__":
     ]
     results = se.eval(transfer_tasks)
     print(args.model, results)
-    with open(f"sent_eval_{args.model}.txt", "w") as out_file:
-        out_file.write(results)
+
+    test_result_path = "./artifacts/test"
+    if not os.path.exists(test_result_path):
+        os.makedirs(test_result_path)
+    senteval_out_file = "{}/sent_eval_{}.txt".format(test_result_path, args.model)
+    with open(senteval_out_file, "w+") as out_file:
+        out_file.write(json.dumps(results))
+    print("The SentEval test result is exported to {}".format(senteval_out_file))
