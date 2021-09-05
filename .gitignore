@@ -1,2 +1,9 @@
 artifacts
 __pycache__
+CR/
+MPQA/
+MR/
+MRPC/
+SST/
+SUBJ/
+TREC/
