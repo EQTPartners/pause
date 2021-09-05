@@ -16,7 +16,9 @@ from data_utils import make_dataset, feature_spec, train_files, eval_files
 from loss import get_nnpu_loss_fn
 
 
-def run(argv=None):
+def run() -> None:
+    """Train PAUSE on SNLI and Multi-Genre NLI datasets with a certain label ratio."""
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model",
@@ -77,7 +79,7 @@ def run(argv=None):
         help="The path where models and weights are stored",
     )
 
-    opts, _ = parser.parse_known_args(argv)
+    opts, _ = parser.parse_known_args()
     print(opts)
 
     train_dataset = make_dataset(
