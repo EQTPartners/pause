@@ -5,6 +5,7 @@
 # License: MIT, https://github.com/EQTPartners/pause/LICENSE.md
 #
 # Download and tokenize data with MOSES tokenizer
+# This is adapted from https://github.com/facebookresearch/SentEval
 
 
 data_path=.
