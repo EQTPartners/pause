@@ -12,7 +12,7 @@ This repository contains Tensorflow implementation of PAUSE to reproduce the exp
 ```bibtex
 @inproceedings{cao2021pause,
   title={PAUSE: Positive and Annealed Unlabeled Sentence Embedding},
-  author={Cao, Lele and Larsson, Emil and Ehrenheim, Vilhelm von and Rocha, Dhiana Deva Cavalcanti and Martin, Anna and Horn, Sonja},
+  author={Cao, Lele and Larsson, Emil and von Ehrenheim, Vilhelm and Cavalcanti Rocha, Dhiana Deva and Martin, Anna and Horn, Sonja},
   booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
   year={2021}
 }
@@ -120,7 +120,7 @@ python ft_stsb_test.py --model=20210517-131726
 
 ## SentEval evaluation
 
-To evaluate the PAUSE embeddings using [SentEval](https://github.com/facebookresearch/SentEval), you need to download the data first:
+To evaluate the PAUSE embeddings using [SentEval](https://github.com/facebookresearch/SentEval) (preferably using GPU), you need to download the data first:
 ```bash
 cd ./data/downstream
 ./get_transfer_data.bash
@@ -133,7 +133,7 @@ python sent_eval.py \
   --data_path=./data \
   --model=20210328-212801
 ```
-where the `--model` parameter specified the ID of the model you want to evaluate. By default, the model should exist in folder `./artifacts/model/embed`. If you want to evaluate a trained model in our public GCS (`gs://motherbrain-pause/model/...`), please run (e.g. `PAUSE-NLI-base-50%`):
+where the `--model` parameter specifies the ID of the model you want to evaluate. By default, the model should exist in folder `./artifacts/model/embed`. If you want to evaluate a trained model in our public GCS (`gs://motherbrain-pause/model/...`), please run (e.g. `PAUSE-NLI-base-50%`):
 ```bash
 python sent_eval.py \
   --data_path=./data \
