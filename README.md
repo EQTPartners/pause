@@ -1,5 +1,7 @@
 # PAUSE: Positive and Annealed Unlabeled Sentence Embedding
 
+This repo contains source code to reproduce the baseline results in the paper: [**PAUSE: Positive and Annealed Unlabeled Sentence Embedding**](https://aclanthology.org/2021.emnlp-main.791).
+
 Sentence embedding refers to a set of effective and versatile techniques for converting raw text into numerical vector representations that can be used in a wide range of natural language processing (NLP) applications. The majority of these techniques are either supervised or unsupervised. Compared to the unsupervised methods, the supervised ones make less assumptions about optimization objectives and usually achieve better results. However, the training requires a large amount of labeled sentence pairs, which is not available in many industrial scenarios. To that end, we propose a generic and end-to-end approach -- PAUSE (Positive and Annealed Unlabeled Sentence Embedding), capable of learning high-quality sentence embeddings from a partially labeled dataset, which effectively learns sentence embeddings from PU datasets by jointly optimizing the supervised and PU loss. The main highlights of PAUSE include:
 - good sentence embeddings can be learned from datasets with only a few positive labels;
 - it can be trained in an end-to-end fashion;
@@ -10,12 +12,21 @@ Sentence embedding refers to a set of effective and versatile techniques for con
 
 This repository contains Tensorflow implementation of PAUSE to reproduce the experimental results. Upon using this repo for your work, please cite:
 ```bibtex
-@inproceedings{cao2021pause,
-  title={PAUSE: Positive and Annealed Unlabeled Sentence Embedding},
-  author={Cao, Lele and Larsson, Emil and von Ehrenheim, Vilhelm and Cavalcanti Rocha, Dhiana Deva and Martin, Anna and Horn, Sonja},
-  booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-  year={2021},
-  url={https://arxiv.org/abs/2109.03155}
+@inproceedings{cao-etal-2021-pause,
+    title = "{PAUSE}: Positive and Annealed Unlabeled Sentence Embedding",
+    author = "Cao, Lele  and
+      Larsson, Emil  and
+      von Ehrenheim, Vilhelm  and
+      Cavalcanti Rocha, Dhiana Deva  and
+      Martin, Anna  and
+      Horn, Sonja",
+    booktitle = "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing",
+    month = nov,
+    year = "2021",
+    address = "Online and Punta Cana, Dominican Republic",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.emnlp-main.791",
+    pages = "10096--10107",
 }
 ```
 
