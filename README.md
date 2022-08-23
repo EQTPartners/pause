@@ -1,8 +1,12 @@
 # PAUSE: Positive and Annealed Unlabeled Sentence Embedding
 
 This repo contains source code to reproduce the baseline results in the paper: [**PAUSE: Positive and Annealed Unlabeled Sentence Embedding**](https://aclanthology.org/2021.emnlp-main.791).
-
 For a quick capture of this work, you can watch [the video of our presentation on EMNLP 2021](https://underline.io/lecture/37659-pause-positive-and-annealed-unlabeled-sentence-embedding).
+
+[![version](https://img.shields.io/badge/Version-v1.0-green)](https://github.com/EQTPartners/pause/releases/tag/1.0)
+[![cikm](https://img.shields.io/badge/EMNLP-2021-blueviolet)](https://2021.emnlp.org/)
+[![python](https://img.shields.io/badge/Python-3.7-yellow)](https://www.python.org/downloads/release/python-370/)
+[![python](https://img.shields.io/badge/Motherbrain-Research-orange)](https://eqtgroup.com/motherbrain)
 
 Sentence embedding refers to a set of effective and versatile techniques for converting raw text into numerical vector representations that can be used in a wide range of natural language processing (NLP) applications. The majority of these techniques are either supervised or unsupervised. Compared to the unsupervised methods, the supervised ones make less assumptions about optimization objectives and usually achieve better results. However, the training requires a large amount of labeled sentence pairs, which is not available in many industrial scenarios. To that end, we propose a generic and end-to-end approach -- PAUSE (Positive and Annealed Unlabeled Sentence Embedding), capable of learning high-quality sentence embeddings from a partially labeled dataset, which effectively learns sentence embeddings from PU datasets by jointly optimizing the supervised and PU loss. The main highlights of PAUSE include:
 - good sentence embeddings can be learned from datasets with only a few positive labels;
