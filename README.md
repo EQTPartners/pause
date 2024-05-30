@@ -1,3 +1,10 @@
+<div align="center">
+  <h1>⚠️ This repository has migrated ⚠️</h1>
+  <p>This repository will not be maintained any further, and issues and pull requests may be ignored. For an up to date codebase, issues, and pull requests, please continue to the <a href="https://github.com/llcresearch/pause">new repository</a>.</p>
+</div>
+
+---
+
 # PAUSE: Positive and Annealed Unlabeled Sentence Embedding
 
 This repo contains source code to reproduce the baseline results in the paper: [**PAUSE: Positive and Annealed Unlabeled Sentence Embedding**](https://aclanthology.org/2021.emnlp-main.791).
